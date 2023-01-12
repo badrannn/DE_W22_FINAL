@@ -1,0 +1,33 @@
+services:
+  pgdatabase:
+    image: postgres:13
+    environment:
+      - POSTGRES_USER=root
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=UK_Accidents_2018
+    volumes:
+      - "./UK_Accidents_2018_postgres:/var/lib/postgresql/data:rw"
+    ports:
+      - "5432:5432"    
+    networks:
+      - airflow
+  pgadmin:                    
+    image: dpage/pgadmin4:4.23
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+      PGADMIN_LISTEN_PORT: 80
+    ports:
+      - 15432:80
+    volumes:
+      - pgadmin:/var/lib/pgadmin
+    depends_on:
+      - pgdatabase
+    networks:
+      - airflow
+networks:
+  airflow:
+    external:
+      name: airflow_milestone3_default  
+volumes:
+  pgadmin:
